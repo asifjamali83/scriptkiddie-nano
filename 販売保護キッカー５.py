@@ -1,13 +1,18 @@
-# coding:utf-8
-#from linepy import *
-from LineAPI.linepy import *
-import random, requests, shutil, codecs, json, random, os
-yukino_1 = LINE('tinkow@sute.jp','1018abc',appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
-yukino_2 = LINE('cecec@sute.jp','1018abc',appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
-yukino_3 = LINE('nnnnn1@sute.jp','1018abc',appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
-yukino_4 = LINE('dsdsd@sute.jp','1018abc',appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
-yukono_5 = LINE('arara@sute.jp','1018abc',appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
-
+# coding: utf-8
+# from linepy import LINE, OEPoll
+from LineAPI.linepy import LINE, OEPoll
+import random
+import requests
+import shutil
+import codecs
+import json
+import random
+import os
+yukino_1 = LINE('tinkow@sute.jp', '1018abc', appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
+yukino_2 = LINE('cecec@sute.jp', '1018abc', appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
+yukino_3 = LINE('nnnnn1@sute.jp', '1018abc', appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
+yukino_4 = LINE('dsdsd@sute.jp', '1018abc', appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
+yukono_5 = LINE('arara@sute.jp', '1018abc', appName='CHROMEOS\t2.1.5\tChrome_OS\t1')
 tracer = OEPoll(yukino_1)
 bots = [yukino_1, yukino_2, yukino_3, yukino_4]
 kickers = [yukino_2, yukino_3]
@@ -19,34 +24,26 @@ yukino_3Mid = yukino_3.getProfile().mid
 yukino_4Mid = yukino_4.getProfile().mid
 yukino_5Mid = yukono_5.getProfile().mid
 protect = {
-    'normalProtect' : {},
-    'groupName' : {},
-    'groupPicture' : {},
-    'groupUrl' : {},
-    'blackUsers' : {},
-    'whiteUsers' : {}
+    'normalProtect': {},
+    'groupName': {},
+    'groupPicture': {},
+    'groupUrl': {},
+    'blackUsers': {},
+    'whiteUsers': {}
 }
-
-
-admins = ["u607b10261fdf476adeaf55ebddae2eb4","uc826d3bf17da72b21215836b0abc1acd"]
+admins = ["u607b10261fdf476adeaf55ebddae2eb4", "uc826d3bf17da72b21215836b0abc1acd"]
 readData = codecs.open('./normalProtect.json', 'r', 'utf-8')
 protect['normalProtect'] = json.load(readData)
-
 readData = codecs.open('./groupName.json', 'r', 'utf-8')
 protect['groupName'] = json.load(readData)
-
 readData = codecs.open('./groupPicture.json', 'r', 'utf-8')
 protect['groupPicture'] = json.load(readData)
-
 readData = codecs.open('./groupUrl.json', 'r', 'utf-8')
 protect['groupUrl'] = json.load(readData)
-
 readData = codecs.open('./blackUsers.json', 'r', 'utf-8')
 protect['blackUsers'] = json.load(readData)
-
 readData = codecs.open('./whiteUsers.json', 'r', 'utf-8')
 protect['whiteUsers'] = json.load(readData)
-
 profile = yukino_1.getProfile()
 helptext = "保護BOTのコマンド一覧だよ。上手く使ってね♪\n" \
             "★/mid✩୭⋆*✦*⋆୭*✩自分のmidを提示させる事が可能\n" \
@@ -65,16 +62,21 @@ helptext = "保護BOTのコマンド一覧だよ。上手く使ってね♪\n" \
 			"このBOTの使用者になりたい方は下記を追加してください\n\nhttp://line.me/ti/p/%40tuc0263b" 
 print(protect)
 print("success")
+
+
 def download_img(url, file_name):
     r = requests.get(url, stream=True)
     if r.status_code == 200:
         with open(file_name, 'wb') as f:
             r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
+
+
 def random_string(length, seq='0123456789abcdefghijklmnopqrstuvwxyz'):
     sr = random.SystemRandom()
     return ''.join([sr.choice(seq) for i in range(length)])
-    
+
+
 def RECEIVE_MESSAGE(op):
     msg = op.message
     print(op)
@@ -98,8 +100,8 @@ def RECEIVE_MESSAGE(op):
                         yukino_1.sendMessage(msg.to, "このユーザーはすでにホワイトリストに登録されています。")
                     else:
                         protect['whiteUsers'][whiteUserMid] = True
-                        f = codecs.open('./whiteUsers.json','w','utf-8')
-                        json.dump(protect['whiteUsers'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                        f = codecs.open('./whiteUsers.json', 'w', 'utf-8')
+                        json.dump(protect['whiteUsers'], f, sort_keys=True, indent=4, ensure_ascii=False)
                         yukino_1.sendMessage(msg.to, "ホワイトリストに追加しました！")
                 elif msg.text == "/保護 オン":
                     if msg._from in protect['whiteUsers']:
@@ -107,7 +109,7 @@ def RECEIVE_MESSAGE(op):
                             yukino_1.sendMessage(msg.to, "保護機能はすでに有効になっています。")
                         else:
                             protect['normalProtect'][msg.to] = True
-                            readData = codecs.open('./normalProtect.json','w','utf-8')
+                            readData = codecs.open('./normalProtect.json', 'w', 'utf-8')
                             json.dump(protect['normalProtect'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "保護機能を有効にしました。")
                     elif msg._from in admins:
@@ -115,14 +117,14 @@ def RECEIVE_MESSAGE(op):
                             yukino_1.sendMessage(msg.to, "保護機能はすでに有効になっています。")
                         else:
                             protect['normalProtect'][msg.to] = True
-                            readData = codecs.open('./normalProtect.json','w','utf-8')
+                            readData = codecs.open('./normalProtect.json', 'w', 'utf-8')
                             json.dump(protect['normalProtect'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "保護機能を有効にしました。")
                 elif msg.text == "/保護 オフ":
                     if msg._from in protect['whiteUsers']:
                         if msg.to in protect['normalProtect']:
                             del protect['normalProtect'][msg.to]
-                            readData = codecs.open('./normalProtect.json','w','utf-8')
+                            readData = codecs.open('./normalProtect.json', 'w', 'utf-8')
                             json.dump(protect['normalProtect'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "保護機能を解除しました。")
                         else:
@@ -130,7 +132,7 @@ def RECEIVE_MESSAGE(op):
                     elif msg._from in admins:
                         if msg.to in protect['normalProtect']:
                             del protect['normalProtect'][msg.to]
-                            readData = codecs.open('./normalProtect.json','w','utf-8')
+                            readData = codecs.open('./normalProtect.json', 'w', 'utf-8')
                             json.dump(protect['normalProtect'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "保護機能を解除しました。")
                         else:
@@ -141,22 +143,22 @@ def RECEIVE_MESSAGE(op):
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能はすでに有効になっています。")
                         else:
                             protect['groupName'][msg.to] = yukino_1.getGroup(msg.to).name
-                            f=codecs.open('./groupName.json','w','utf-8')
-                            json.dump(protect['groupName'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                            f=codecs.open('./groupName.json', 'w', 'utf-8')
+                            json.dump(protect['groupName'], f, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能を有効にしました。")
                     elif msg._from in admins:
                         if msg.to in protect['groupName']:
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能はすでに有効になっています。")
                         else:
                             protect['groupName'][msg.to] = yukino_1.getGroup(msg.to).name
-                            f=codecs.open('./groupName.json','w','utf-8')
-                            json.dump(protect['groupName'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                            f=codecs.open('./groupName.json', 'w', 'utf-8')
+                            json.dump(protect['groupName'], f, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能を有効にしました。。")
                 elif msg.text == "/保護 名前 オフ":
                     if msg._from in protect['whiteUsers']:
                         if msg.to in protect['groupName']:
                             del protect['groupName'][msg.to]
-                            readData = codecs.open('./groupName.json','w','utf-8')
+                            readData = codecs.open('./groupName.json', 'w', 'utf-8')
                             json.dump(protect['groupName'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能を解除しました。")
                         else:
@@ -164,7 +166,7 @@ def RECEIVE_MESSAGE(op):
                     elif msg._from in admins:
                         if msg.to in protect['groupName']:
                             del protect['groupName'][msg.to]
-                            readData = codecs.open('./groupName.json','w','utf-8')
+                            readData = codecs.open('./groupName.json', 'w', 'utf-8')
                             json.dump(protect['groupName'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ名の保護機能を解除しました。")
                         else:
@@ -176,7 +178,7 @@ def RECEIVE_MESSAGE(op):
                         else:
                             try:
                                 imageName = random_string(10) + ".png"
-                                download_img("http://dl.profile.line-cdn.net/"+yukino_1.getGroup(msg.to).pictureStatus, imageName)
+                                download_img("http://dl.profile.line-cdn.net/" + yukino_1.getGroup(msg.to).pictureStatus, imageName)
                                 protect['groupPicture'][msg.to] = imageName
                                 readData = codecs.open('./groupPicture.json', 'w', 'utf-8')
                                 json.dump(protect['groupPicture'], readData, sort_keys=True, indent=4, ensure_ascii=False)
@@ -189,7 +191,7 @@ def RECEIVE_MESSAGE(op):
                         else:
                             try:
                                 imageName = random_string(10) + ".png"
-                                download_img("http://dl.profile.line-cdn.net/"+yukino_1.getGroup(msg.to).pictureStatus, imageName)
+                                download_img("http://dl.profile.line-cdn.net/" + yukino_1.getGroup(msg.to).pictureStatus, imageName)
                                 protect['groupPicture'][msg.to] = imageName
                                 readData = codecs.open('./groupPicture.json', 'w', 'utf-8')
                                 json.dump(protect['groupPicture'], readData, sort_keys=True, indent=4, ensure_ascii=False)
@@ -202,7 +204,7 @@ def RECEIVE_MESSAGE(op):
                             imagePath = "./" + protect['groupPicture'][msg.to]
                             os.remove(imagePath)
                             del protect['groupPicture'][msg.to]
-                            readData = codecs.open('./groupPicture.json','w','utf-8')
+                            readData = codecs.open('./groupPicture.json', 'w', 'utf-8')
                             json.dump(protect['groupPicture'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ画像の保護機能を解除しました。")
                         else:
@@ -212,7 +214,7 @@ def RECEIVE_MESSAGE(op):
                             imagePath = "./" + protect['groupPicture'][msg.to]
                             os.remove(imagePath)
                             del protect['groupPicture'][msg.to]
-                            readData = codecs.open('./groupPicture.json','w','utf-8')
+                            readData = codecs.open('./groupPicture.json', 'w', 'utf-8')
                             json.dump(protect['groupPicture'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループ画像の保護機能を解除しました。")
                         else:
@@ -244,7 +246,7 @@ def RECEIVE_MESSAGE(op):
                     if msg._from in protect['whiteUsers']:
                         if msg.to in protect['groupUrl']:
                             del protect['groupUrl'][msg.to]
-                            readData = codecs.open('./groupUrl.json','w','utf-8')
+                            readData = codecs.open('./groupUrl.json', 'w', 'utf-8')
                             json.dump(protect['groupUrl'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループurlの保護機能を解除しました。")
                         else:
@@ -252,7 +254,7 @@ def RECEIVE_MESSAGE(op):
                     elif msg._from in admins:
                         if msg.to in protect['groupUrl']:
                             del protect['groupUrl'][msg.to]
-                            readData = codecs.open('./groupUrl.json','w','utf-8')
+                            readData = codecs.open('./groupUrl.json', 'w', 'utf-8')
                             json.dump(protect['groupUrl'], readData, sort_keys=True, indent=4, ensure_ascii=False)
                             yukino_1.sendMessage(msg.to, "グループurlの保護機能を解除しました。")
                         else:
@@ -301,8 +303,12 @@ def RECEIVE_MESSAGE(op):
             except Exception as error:
                 print(error)
     except Exception as error:
-        print(error) 
+        print(error)
+
+
 tracer.addOpInterrupt(26, RECEIVE_MESSAGE)
+
+
 def NOTIFIED_KICKOUT_FROM_GROUP(op):
     print(op)
     try:
@@ -378,8 +384,8 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
                     pass
                 else:
                     protect['blackUsers'][op.param2] = True
-                    f=codecs.open('./blackUsers.json','w','utf-8')
-                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                    f = codecs.open('./blackUsers.json', 'w', 'utf-8')
+                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4, ensure_ascii=False)
             elif op.param3 in yukino_1Mid:
                 K = random.choice(kickers)
                 K.kickoutFromGroup(op.param1, [op.param2])
@@ -402,8 +408,8 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
                     pass
                 else:
                     protect['blackUsers'][op.param2] = True
-                    f=codecs.open('./blackUsers.json','w','utf-8')
-                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                    f = codecs.open('./blackUsers.json', 'w', 'utf-8')
+                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4, ensure_ascii=False)
             else:
                 try:
                     yukino_3.kickoutFromGroup(op.param1, [op.param2])
@@ -417,11 +423,15 @@ def NOTIFIED_KICKOUT_FROM_GROUP(op):
                     pass
                 else:
                     protect['blackUsers'][op.param2] = True
-                    f=codecs.open('./blackUsers.json','w','utf-8')
-                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                    f = codecs.open('./blackUsers.json', 'w', 'utf-8')
+                    json.dump(protect['blackUsers'], f, sort_keys=True, indent=4, ensure_ascii=False)
     except Exception as error:
         print(error)
+
+
 tracer.addOpInterrupt(19, NOTIFIED_KICKOUT_FROM_GROUP)
+
+
 def NOTIFIED_INVITE_INTO_GROUP(op):
     try:
         if profile.mid in op.param3:
@@ -472,7 +482,7 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
                     G.preventedJoinByTicket = True
                     yukino_1.updateGroup(G)
         elif op.param1 in protect['normalProtect']:
-            Inviter = op.param3.replace("",',')
+            Inviter = op.param3.replace("", ',')
             InviterX = Inviter.split(",")
             matched_list = []
             for tag in protect['blackUsers']:
@@ -483,7 +493,11 @@ def NOTIFIED_INVITE_INTO_GROUP(op):
                 yukino_1.cancelGroupInvitation(op.param1, matched_list)
     except Exception as error:
         print(error)
+
+
 tracer.addOpInterrupt(13, NOTIFIED_INVITE_INTO_GROUP)
+
+
 def NOTIFIED_UPDATE_GROUP(op):
     print(op)
     try:
@@ -520,10 +534,11 @@ def NOTIFIED_UPDATE_GROUP(op):
                         pass
                     else:
                         protect['blackUsers'][op.param2] = True
-                        f=codecs.open('./blackUsers.json','w','utf-8')
-                        json.dump(protect['blackUsers'], f, sort_keys=True, indent=4,ensure_ascii=False)
+                        f=codecs.open('./blackUsers.json', 'w', 'utf-8')
+                        json.dump(protect['blackUsers'], f, sort_keys=True, indent=4, ensure_ascii=False)
     except Exception as error:
         print(error)
+
 
 tracer.addOpInterrupt(11,NOTIFIED_UPDATE_GROUP)
 while True:
