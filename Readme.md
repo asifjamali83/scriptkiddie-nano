@@ -6,3 +6,5 @@
 These sources are garbage sauce written by harmful user sister. 
 Please be careful not to vomit. 
 Please use it freely as it is MIT license.
+
+10月5日, noelxyz氏によりマージされました。
